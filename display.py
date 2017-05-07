@@ -4,7 +4,6 @@ import pyqtgraph as pg
 import sys
 
 
-
 print "Initializing... \t",
 app = QtGui.QApplication([])
 view = pg.GraphicsView()
@@ -15,12 +14,10 @@ view.setWindowTitle('FFT display')
 view.resize(800,600)
 print "initialization complete."
 
-text = """
-This example demonstrates the use of GraphicsLayout to arrange items in a grid.<br>
-The items added to the layout must be subclasses of QGraphicsWidget (this includes <br>
-PlotItem, ViewBox, LabelItem, and GrphicsLayout itself).
-"""
-l.addLabel(text, col=1, colspan=4)	
+
+p1 = l.addPlot(title="Time", col=1)
+l.nextRow()
+p2 = l.addPlot(title="FFT", col=1)
 
 
 
