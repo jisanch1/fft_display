@@ -24,41 +24,50 @@ class Screen:
 		self.curve2 = self.p2.plot(stepMode=True, fillLevel=0)
 		print "Creating buffers..."
 		self.pos = 0
-		self.len = x
 		self.time = np.arange(x)
 		self.data = np.zeros(x, float)
 		self.freq = np.arange(fx + 1)
-		self.dataf = np.zeros(fx, float)
+		self.fdata = np.zeros(fx, float)
 		print "initialization complete."
 
 
 	def plot(self):
 		self.curve1.setData(self.time, self.data, pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=('b'))
-		
 
 	def plot_fft(self): 
-		self.curve2.setData(self.freq, self.dataf)
+		self.curve2.setData(self.freq, self.fdata)
 
 	def next_point(self, point):
 		self.data[self.pos] = point
 		self.pos += 1
-		self.pos %= self.len
+		self.pos %= self.time.size
+
+	def update_fft(self, freq, val):
+		self.fdata[freq] = val
+
+	def reset_fft(self):
+		self.fdata = np.zeros(self.fdata.size, float)
 
 		
 
 ## Testbench
 app = QtGui.QApplication([])
 
-length = 355
+length = 347
 screen = Screen(length, 2, 100, 2)
 time = 0
 
 def run():
 	global screen
 	global time
-	volt = np.sin(np.pi*time/100)
+	volt = np.sin(np.pi*time/34)
 	screen.next_point(volt)
-	screen.plot()
+	if (time % 1 == 0):
+		screen.plot()
+	if (time % 1 == 0):
+		screen.update_fft((time % 10)*10, volt)
+	if (time % 10 == 0):
+		screen.plot_fft()
 	time += 1
 
 
