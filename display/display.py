@@ -6,7 +6,7 @@ import sys
 class Screen:
 
 	def __init__(self, x, y, fx, fy):
-		print "Initializing..."
+		
 		self.view = pg.GraphicsView()
 		self.layout = pg.GraphicsLayout(border=(100,100,100))
 		self.view.setCentralItem(self.layout)
@@ -22,13 +22,11 @@ class Screen:
 		self.p2.setRange(xRange=[0, fx])
 		self.curve1 = self.p1.plot()
 		self.curve2 = self.p2.plot(stepMode=True, fillLevel=0)
-		print "Creating buffers..."
 		self.pos = 0
 		self.time = np.arange(x)
 		self.data = np.zeros(x, float)
 		self.freq = np.arange(fx + 1)
 		self.fdata = np.zeros(fx, float)
-		print "initialization complete."
 
 
 	def plot(self):
@@ -51,8 +49,9 @@ class Screen:
 		
 
 ## Testbench
+'''
+print "Initializing..."
 app = QtGui.QApplication([])
-
 length = 347
 screen = Screen(length, 2, 100, 2)
 time = 0
@@ -70,8 +69,10 @@ def run():
 		screen.plot_fft()
 	time += 1
 
-
 timer = pg.QtCore.QTimer()
 timer.timeout.connect(run)
 timer.start(10) #milliseconds
+print "initialization complete."
+
 app.instance().exec_()
+'''
