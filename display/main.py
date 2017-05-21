@@ -5,18 +5,15 @@ import pyqtgraph as pg
 from serial import Serial
 from display import Screen
 
-length = 343
-time = 0
+length = 500
 
 def run():
 	global screen
 	global stream
-	global time
-	if (stream.in_waiting > 10):
+	while (stream.in_waiting > 10):
 		val = stream.readline()
 		screen.next_point(float(val))
-	if (time % 1 == 0):
-		screen.plot()
+	screen.plot()
 
 
 
@@ -25,16 +22,16 @@ app = QtGui.QApplication([])
 timer = pg.QtCore.QTimer()
 
 port = sys.argv[1]
-if (sys.argv[2] != None):
+if (len(sys.argv) >= 3):
 	baud = sys.argv[2]		
 else:
 	baud = 9600		
 
-screen = Screen(length, 2, 100, 2)
+screen = Screen(length, 5, 100, 2)
 stream = Serial(port, baud)
 
 timer.timeout.connect(run)
-timer.start(10) #milliseconds
+timer.start(1) #milliseconds
 print "Initialization complete."
 app.instance().exec_()
 

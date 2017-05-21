@@ -30,7 +30,8 @@ class Screen:
 
 
 	def plot(self):
-		self.curve1.setData(self.time, self.data, pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=('b'))
+		self.curve1.setData(self.time, self.data)
+		#self.curve1.setData(self.time, self.data, pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=('b'))
 
 	def plot_fft(self): 
 		self.curve2.setData(self.freq, self.fdata)
