@@ -12,9 +12,14 @@ def run():
 	global stream
 	while (stream.in_waiting > 10):
 		val = stream.readline()
-		screen.next_point(float(val))
-	screen.plot()
-
+		#screen.next_point(float(val))
+		line = val.split(',')
+		freq = 0
+		for mag in line:
+			screen.update_fft(freq, mag)
+			freq += 15
+	#screen.plot()
+	screen.plot_fft()
 
 
 print "Initializing..."
@@ -27,7 +32,7 @@ if (len(sys.argv) >= 3):
 else:
 	baud = 9600		
 
-screen = Screen(length, 5, 100, 2)
+screen = Screen(length, 5, 120, 5)
 stream = Serial(port, baud)
 
 timer.timeout.connect(run)
