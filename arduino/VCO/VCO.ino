@@ -8,14 +8,16 @@
 
 /****** variables ********/
 // dac variables 
-const double min_res = 5800;
+const double min_res = 5750;
 const double fourpi = 12.566371;
 int j;
 unsigned int dac_val;
 unsigned int readd;
+unsigned int readd2;
 double pos;
 double stepp;
 double amp;
+double gain;
 
 
 /****** main functions ********/
@@ -28,6 +30,7 @@ void setup()
     
     pos = 0;
     j = 0;
+    gain = 1;
 }
 
 void loop() 
@@ -36,10 +39,16 @@ void loop()
     {
       readd = analogRead(A1);
       stepp = (double)readd / min_res;
+      readd2 = analogRead(A2);
+      gain = (double)readd2; 
+      gain /= 1024;
+      j = 0;
     }
+    
     pos += stepp;
     if (pos > fourpi)  pos -= fourpi;
     amp = sin(pos);
+    amp *= gain;
     amp += 1;
     amp *= 2048;
     dac_val = (unsigned int)amp;
