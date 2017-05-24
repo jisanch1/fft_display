@@ -8,7 +8,7 @@
 
 /****** variables ********/
 // dac variables 
-const double min_res = 5750;
+const double min_res = 5600;
 const double fourpi = 12.566371;
 int j;
 unsigned int dac_val;
