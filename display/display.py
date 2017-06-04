@@ -14,7 +14,7 @@ class Screen:
 		self.view.setWindowTitle('FFT display')
 		self.view.resize(800,600)
 		self.p1 = self.layout.addPlot(title="Time", col=1)
-		self.p1.setRange(yRange=[-y, y])
+		self.p1.setRange(yRange=[0, y])
 		self.p1.setRange(xRange=[0, x])
 		self.layout.nextRow()
 		self.p2 = self.layout.addPlot(title="FFT", col=1)

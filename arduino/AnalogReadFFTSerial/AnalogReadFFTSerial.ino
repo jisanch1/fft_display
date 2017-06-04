@@ -183,10 +183,8 @@ void loop() {
     int j;
     for (j = 0; j < BUF_LEN; j++)
     {
-      input_buffer[j] /= 1024;
-      input_buffer[j] *= 5;
-      input_buffer[j] -= 2;
-      input_buffer[j] /= 5;
+      input_buffer[j] /= 512;
+      input_buffer[j] -= 1;
     }
     
     R16SRFFT(input_buffer, mid_buffer);

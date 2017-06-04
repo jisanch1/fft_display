@@ -7,7 +7,6 @@ from display import Screen
 
 length = 500
 
-'''
 def run():
 	global screen
 	global stream
@@ -27,7 +26,7 @@ def run():
 		val = stream.readline()
 		screen.next_point(float(val))
 	screen.plot()
-
+'''
 
 
 print "Initializing..."
@@ -41,7 +40,7 @@ if (len(sys.argv) >= 4):
 else:
 	baud = 115200		
 
-screen = Screen(length, 5, 10, 70)
+screen = Screen(length, 5, 120, 70)
 stream = Serial(port, baud)
 
 timer.timeout.connect(run)
