@@ -1,5 +1,6 @@
 /* I am Groot */
 #include <avr/io.h>
+#include <avr/cpufunc.h>
 #include "uart.h"
 
 /* UART Configuration Parameters */
@@ -98,7 +99,7 @@ inline char uart_read_char(void)
 
 inline void uart_send_char(char ch)
 {
-	if (UCSR0A & _BV(UDRE0))
+	while(!(UCSR0A & _BV(UDRE0))) {_NOP();}
 		UDR0 = ch;
 }
 
