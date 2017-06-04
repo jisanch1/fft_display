@@ -10,8 +10,8 @@ void cfft(double *input_buf, double *real_buf, double * imag_buf, int n)
 		for (j = 0; j < n; j++)
 		{
 			k = (i*j) % n;
-			real_buf[i] += input_buf[j]*tcos[k];
-			imag_buf[i] -= input_buf[j]*tsin[k];
+			real_buf[i] += input_buf[j]*tcos[k]/FFT_LEN;
+			imag_buf[i] -= input_buf[j]*tsin[k]/FFT_LEN;
 		}
 	}
 }
@@ -20,7 +20,7 @@ void cfft(double *input_buf, double *real_buf, double * imag_buf, int n)
 
 int main()
 {
-	double inbuf[] = {0,1,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+	double inbuf[] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 0,1,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
 	double rbuf[FFT_LEN];
 	double ibuf[FFT_LEN];
 	cfft(inbuf, rbuf, ibuf, FFT_LEN);

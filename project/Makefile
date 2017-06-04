@@ -1,4 +1,4 @@
-FILES=src/main.c src/uart/uart.c src/uart/debugger.c src/uart/cbuf.c src/timer/timer0.c src/adc/adc.c
+FILES=src/main.c src/uart/uart.c src/uart/debugger.c src/uart/cbuf.c src/timer/timer0.c src/adc/adc.c src/dft/dft.c
 NAME=plataforma
 CC=avr-gcc
 CFLAGS=-Wall -Wextra -Wpedantic --std=gnu99 -O1 
