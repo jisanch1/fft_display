@@ -7,17 +7,17 @@ from display import Screen
 
 length = 500
 
-'''
+
 def run():
 	global screen
 	global stream
-	while (stream.in_waiting > 10):
+	while (stream.in_waiting > 100):
 		val = stream.readline()
 		line = val.split(',')
-		freq = 0
+		freq = 0.0
 		for mag in line:
-			screen.update_fft(freq, mag)
-			freq += 15
+			screen.update_fft(int(freq), mag)
+			freq += 7.5
 	screen.plot_fft()
 '''
 def run():
@@ -27,7 +27,7 @@ def run():
 		val = stream.readline()
 		screen.next_point(float(val))
 	screen.plot()
-
+'''
 
 
 print "Initializing..."
@@ -41,11 +41,11 @@ if (len(sys.argv) >= 4):
 else:
 	baud = 115200		
 
-screen = Screen(length, 5, 10, 70)
+screen = Screen(length, 5, 120, 70)
 stream = Serial(port, baud)
 
 timer.timeout.connect(run)
-timer.start(1) #milliseconds
+timer.start(10) #milliseconds
 print "Initialization complete."
 app.instance().exec_()
 

@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include "dft.h"
 
-/*
+
 const double tsin[] = {
 	0.0,
 	0.19509032,
@@ -71,8 +71,8 @@ const double tcos[] = {
 	0.92387953,
 	0.98078528,
 };
-*/
 
+/*
 const double tsin[] = {
 	0.0,
 	0.38268343,
@@ -110,7 +110,9 @@ const double tcos[] = {
 	0.70710678,
 	0.92387953,
 };
+*/
 
+#define SQRT_32	5.65685424
 
 void dft(double *input_buf, double *real_buf, double *imag_buf, uint8_t n)
 {
@@ -122,8 +124,8 @@ void dft(double *input_buf, double *real_buf, double *imag_buf, uint8_t n)
 		for (j = 0; j < n; j++)
 		{
 			k = (i*j) % n;
-			real_buf[i] += input_buf[j]*tcos[k]/FFT_LEN;
-			imag_buf[i] -= input_buf[j]*tsin[k]/FFT_LEN;
+			real_buf[i] += input_buf[j]*tcos[k]/SQRT_32;
+			imag_buf[i] -= input_buf[j]*tsin[k]/SQRT_32;
 		}
 	}
 }

@@ -157,52 +157,10 @@ void R16SRFFT(float input[16],float output[16] ) {
 }
 
 
-#define BUF_LEN  16
-#define OUT_LEN  BUF_LEN/2
-
-const float alpha = 0.1;
-float input_buffer[BUF_LEN];
-float output_buffer[OUT_LEN];
-float mid_buffer[BUF_LEN];
-float square_buffer[OUT_LEN];
-int n;
 
 
-void setup() {
-  n = 0;
-  Serial.begin(57600);
-}
 
-void loop() {
 
-  input_buffer[n++] = analogRead(A0);
-  
-  if (n >= BUF_LEN)
-  {
-    n = 0;
-    int j;
-    for (j = 0; j < BUF_LEN; j++)
-    {
-      input_buffer[j] /= 512;
-      input_buffer[j] -= 1;
-    }
-    
-    R16SRFFT(input_buffer, mid_buffer);
-    
-    for (j = 0; j < OUT_LEN; j++)
-    {
-      square_buffer[j] = mid_buffer[j]*mid_buffer[j] + mid_buffer[j+OUT_LEN]*mid_buffer[j+OUT_LEN];
-      output_buffer[j] = (1 - alpha)*output_buffer[j] + alpha*square_buffer[j];
-    }
-    
-    for (j = 0; j < OUT_LEN - 1; j++)
-    {
-      Serial.print(output_buffer[j]);
-      Serial.print(",");
-    }
-    Serial.println(output_buffer[j]);
-    
-  }
-  
-  delay(4);   
-}
+
+
+

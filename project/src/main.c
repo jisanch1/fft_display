@@ -1,5 +1,5 @@
 #define F_CPU	16000000UL		// MCU Clock Speed - 16MHz
-#define BAUDRATE 	57600
+#define BAUDRATE 	9600
 
 #include <avr/io.h>
 #include <avr/cpufunc.h>
@@ -14,7 +14,7 @@
 
 #define FFT_SIZE	FFT_LEN
 
-double input_buffer[256];
+double input_buffer[64];
 double data_buffer[FFT_SIZE];
 double real_buffer[FFT_SIZE];
 double imag_buffer[FFT_SIZE];
@@ -35,7 +35,7 @@ int main(void)
 
 	sei();
 
-	dbg_printf("Initilization finished. \r\n");
+	//dbg_printf("Initilization finished. \r\n");
 
 	while(2)
 	{
@@ -55,8 +55,7 @@ int main(void)
 			// fft
 			dft(data_buffer, real_buffer, imag_buffer, FFT_SIZE);
 
-			dbg_printf("f:");
-			for (i = 0; i < FFT_SIZE - 1; i++)
+			for (i = 0; i < FFT_SIZE/2 - 1; i++)
 			{
 				output_buffer[i] = real_buffer[i]*real_buffer[i] + imag_buffer[i]*imag_buffer[i];
 				dbg_printf("%.2f,", output_buffer[i]);
