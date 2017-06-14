@@ -41,7 +41,7 @@ if (len(sys.argv) >= 4):
 else:
 	baud = 115200		
 
-screen = Screen(length, 5, 120, 70)
+screen = Screen(length, 5, 120, 10)
 stream = Serial(port, baud)
 
 timer.timeout.connect(run)
