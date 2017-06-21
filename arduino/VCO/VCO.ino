@@ -1,69 +1,12 @@
 #include <SPI.h>
 
-/****** parameters *******/
-// dac parameters
+/****** DAC *******/
 #define DAC_SS          10
 #define DAC_REF         1024
 #define DAC_RESOLUTION  4096
 
-#define INPUT_PIN      2
+unsigned int dac_val; // esta variable se usa en todo
 
-/****** variables ********/
-// dac variables 
-const double min_res = 5600;
-const double fourpi = 12.566371;
-const double twopi = fourpi/2;
-int j;
-int switch_pos;
-unsigned int dac_val;
-unsigned int readd;
-unsigned int readd2;
-double pos;
-double stepp;
-double amp;
-double gain;
-double phase;
-
-/*** control variables******/
-const double dt = 1/2000;
-double Kp, Ki, Kd;
-double integral, derivative;
-double error, previous_error;
-double output;
-
-
-/****** main functions ********/
-void setup() 
-{         
-    // initialize SPI:
-    SPI.begin();
-    // initialize dac:
-    dac_init();
-    
-    pinMode(INPUT_PIN, INPUT_PULLUP);
-    
-    pos = 0;
-    j = 0;
-    gain = 1;
-    
-    error = 0;
-    output = 0;
-    
-}
-
-void loop() 
-{
-  if (digitalRead(INPUT_PIN))
-  {
-    open_loop();  
-  }
-  else
-  {
-    closed_loop();
-  }
-}
-
-/*** dac functions ***/
 void dac_init()
 {
     // set the dac pin as an output:
@@ -87,20 +30,49 @@ void dac_write(unsigned int val)
     digitalWrite(DAC_SS, HIGH);
 }
 
+
+/**** switch open/close loop ***/
+#define INPUT_PIN      2
+
+void switch_init()
+{
+  pinMode(INPUT_PIN, INPUT_PULLUP);
+}
+
+/****** open loop ********/
+// dac variables 
+const double min_res = 5600;
+const double fourpi = 12.566371;
+const double twopi = 12.566371/2;
+int check;
+int switch_pos;
+
+double pos;
+double stepp;
+double amp;
+double gain;
+double phase;
+
+void open_loop_init()
+{
+    pos = 0;
+    check = 0;
+    gain = 1;
+}
+
 void open_loop()
 {
-  if (j%100 == 0)
+  if (check % 100 == 0)
     {
-      readd = analogRead(A0);
-      stepp = (double)readd / min_res;
-      readd2 = analogRead(A1);
-      gain = (double)readd2; 
+      stepp = analogRead(A0);
+      stepp /= min_res;
+      gain = analogRead(A1);
       gain /= 1024;
       phase = analogRead(A2);
       phase /= 512;
       phase -= 1;
       phase *= twopi;
-      j = 0;
+      check = 0;
     }
     
     pos += stepp;
@@ -114,13 +86,30 @@ void open_loop()
     dac_write(dac_val);
 
     delayMicroseconds(100);
-    j++;
+    check++;
+}
+
+/*** closed loop ******/
+#define KP_MAX  10
+#define SAMPLE_FREQ   2000
+
+const double dt = 1/SAMPLE_FREQ;
+double Kp, Ki, Kd;
+double integral, derivative;
+double error, previous_error;
+double output;
+
+void closed_loop_init()
+{
+    error = 0;
+    output = 0;
 }
 
 void closed_loop()
 {
-    error = analogRead(A3)*5/1024 - 2.5;
-    Kp = analogRead(A1)*5;
+    error = analogRead(A3);
+    error = error*5/1024 - 2.5;
+    Kp = analogRead(A1)*KP_MAX;
     Kp /= 1024;
     output = Kp * error;
     output *= 2048/5;
@@ -128,6 +117,29 @@ void closed_loop()
     dac_val = (unsigned int)output;
     dac_write(dac_val);
     
-    delayMicroseconds(500);
+    delayMicroseconds(1000000/SAMPLE_FREQ);
 }
-/**********************/
+
+/****** main functions ********/
+void setup() 
+{         
+    SPI.begin();
+    dac_init();
+    switch_init();
+    open_loop_init();
+    closed_loop_init();
+}
+
+void loop() 
+{
+  if (digitalRead(INPUT_PIN))
+  {
+    open_loop();  
+  }
+  else
+  {
+    closed_loop();
+  }
+}
+
+
