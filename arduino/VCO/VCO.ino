@@ -30,6 +30,57 @@ void dac_write(unsigned int val)
     digitalWrite(DAC_SS, HIGH);
 }
 
+/****** FILTER ******/
+#define FILTER_LEN  20
+
+double filter_buf[FILTER_LEN];
+
+// 100 Hz
+const double coefs [FILTER_LEN] = {
+  -0.000370650405764,
+   0.002994542610923,
+   0.007160485655445,
+   0.003631939576628,
+  -0.016763863367532,
+  -0.040164611082293,
+  -0.024537039674789,
+   0.063356947992872,
+   0.199860056559447,
+   0.304832192135062,
+   0.304832192135062,
+   0.199860056559447,
+   0.063356947992872,
+  -0.024537039674789,
+  -0.040164611082293,
+  -0.016763863367532,
+   0.003631939576628,
+   0.007160485655445,
+   0.002994542610923,
+  -0.000370650405764,
+};
+
+double filter(double new_val)
+{
+  
+  // se despazan los valores en 1
+  int i;
+  for (i = FILTER_LEN - 1; i > 0; i--)
+  {
+    filter_buf[i] = filter_buf[i-1];
+  }
+
+  // se asigna el nuevo valor
+  filter_buf[0] = new_val;
+
+  //se calcula el valor de salida
+  double ret = 0;
+  for (i = 0; i < FILTER_LEN; i++)
+  {
+    ret += coefs[i] * filter_buf[i];
+  }
+
+  return ret;
+}
 
 /**** switch open/close loop ***/
 #define INPUT_PIN      2
@@ -109,10 +160,13 @@ void closed_loop()
 {
     error = analogRead(A3);
     error = error*5/1024 - 2.5;
+    error = filter(error);
     Kp = analogRead(A1)*KP_MAX;
     Kp /= 1024;
-    output = Kp * error;
-    output *= 2048/5;
+    output = Kp * (0 - error);
+    output += 2.5;
+    output /= 5;
+    output *= 4096;
     
     dac_val = (unsigned int)output;
     dac_write(dac_val);
