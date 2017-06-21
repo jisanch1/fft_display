@@ -134,8 +134,8 @@ void closed_loop()
 {
   //Kp = analogRead(A0)*5;
   //Kp /= 1024;
-  Kp=38;//analogRead(A0)*5/1024;
-Ki=144.4;//analogRead(A1)*5/1024;
+  Kp=0.5;//analogRead(A0)*5/1024;
+Ki=0.5;//analogRead(A1)*5/1024;
 Kd=0.1;//analogRead(A2)*5/1024;
  Input1 = analogRead(A3);
  double input2 = Input1*5/1024;
@@ -149,10 +149,11 @@ Kd=0.1;//analogRead(A2)*5/1024;
   //output *= 2048/5;
   double output2 = output*2048/5;
   previous_error=error2;
-  double output3=-output2;
+  double output3=output2+80;
 
-  Serial.println(output);  
+  //Serial.println(output3);  
   dac_val = (unsigned int)output2;
+  Serial.println(dac_val); 
   dac_write(dac_val);
     
   delayMicroseconds(500);

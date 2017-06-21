@@ -12,6 +12,7 @@
 // dac variables 
 const double min_res = 5600;
 const double fourpi = 12.566371;
+const double twopi = fourpi/2;
 int j;
 int switch_pos;
 unsigned int dac_val;
@@ -21,6 +22,7 @@ double pos;
 double stepp;
 double amp;
 double gain;
+double phase;
 
 /*** control variables******/
 const double dt = 1/2000;
@@ -94,12 +96,16 @@ void open_loop()
       readd2 = analogRead(A1);
       gain = (double)readd2; 
       gain /= 1024;
+      phase = analogRead(A2);
+      phase /= 512;
+      phase -= 1;
+      phase *= twopi;
       j = 0;
     }
     
     pos += stepp;
     if (pos > fourpi)  pos -= fourpi;
-    amp = sin(pos);
+    amp = sin(pos + phase);
     amp *= gain;
     amp += 1;
     amp *= 2048;
@@ -114,7 +120,7 @@ void open_loop()
 void closed_loop()
 {
     error = analogRead(A3)*5/1024 - 2.5;
-    Kp = analogRead(A0)*5;
+    Kp = analogRead(A1)*5;
     Kp /= 1024;
     output = Kp * error;
     output *= 2048/5;
