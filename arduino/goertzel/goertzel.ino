@@ -102,6 +102,27 @@ double filter(double new_val)
   return ret;
 }
 
+/*** goertzel ***/
+const double c1 = 0.9510565162951535;
+const double c2 = 0.3090169943749474;
+double s0, s1, s2;
+
+
+double goertzel(double new_val)
+{
+  // se desplazan los valores
+  s2 = s1;
+  s1 = s0;
+
+  // se calcula el nuevo valor de s0
+  s0 = new_val + 2*c1*s1 - s2;
+
+  // se calcula el valor de salida
+  double real, imag;
+  real = s0 - c1*s1;
+  imag = c2*s1;
+  return sqrt(real*real + imag*imag);  
+}
 
 
 // the setup routine runs once when you press reset:
@@ -115,6 +136,7 @@ void loop() {
   sensorValue = analogRead(A0);
   sensorValue = sensorValue/1024*5 - 2.5;
   sensorValue = filter(sensorValue);
+  sensorValue = goertzel(sensorValue);
   
   // print out the value you read:
   Serial.println(sensorValue);
