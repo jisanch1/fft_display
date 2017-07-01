@@ -1,3 +1,5 @@
+
+
 void timer_init()
 {
   noInterrupts();           // disable all interrupts
@@ -5,9 +7,9 @@ void timer_init()
   TCCR1B = 0;
   TCNT1  = 0;
 
-  OCR1A = 50;            // 250 = 1KHz, 125 = 2kHz, 50 = 5kHz
+  OCR1A = 800;             // 2000 = 1KHz, 1000 = 2kHz, 800 = 2.5kHz, 400 = 5kHz (2000 / KHz)
   TCCR1B |= (1 << WGM12);   // CTC mode
-  TCCR1B |= (1 << CS11) | (1 << CS10);    // 64 prescaler 
+  TCCR1B |= (1 << CS11);    // 8 prescaler 
   TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt
   interrupts();             // enable all interrupts
 }

@@ -1,8 +1,6 @@
 /****** open loop ********/
 //const double min_res = 5600;
-const double min_res = 1550;  // 2kHz
-const double fourpi = 12.566371;
-const double twopi = 12.566371/2;
+const double min_res = 1550;  // 1kHz
 int check;
 int switch_pos;
 

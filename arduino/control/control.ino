@@ -1,5 +1,8 @@
 #include <SPI.h>
 
+const double fourpi = 12.566371;
+const double twopi = 12.566371/2;
+
 unsigned int dac_val; // esta variable se usa en todo
 
 /**** switch open/close loop ***/
