@@ -1,4 +1,20 @@
 /****** FILTER ******/
+double previous;
+double alpha = 0.5;
+
+double expfilter(double in)
+{
+  return alpha*in + (1-alpha)*previous;
+}
+
+double distance(double acc, double dist, double dt)
+{
+  double vel = acc*dt;
+  dist = 0.4*dist + vel*dt + 0.5*acc*dt*dt;
+  return dist;
+}
+
+
 #define FILTER_LEN  25
 
 double filter_buf[FILTER_LEN];

@@ -14,16 +14,16 @@ void switch_init()
 /****** main functions ********/
 void setup() 
 {         
-    pinMode(LED_BUILTIN, OUTPUT);
-    //SPI.begin();
+    //pinMode(INPUT_PIN, OUTPUT);
+    SPI.begin();
     Serial.begin(115200);
-    Serial.setTimeout(1);
+    Serial.setTimeout(10);
     dac_init();
     switch_init();
     open_loop_init();
     closed_loop_init();
     timer_init();
-    sei();
+    interrupts();
 }
 
 void loop() 

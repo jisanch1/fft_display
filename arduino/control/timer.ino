@@ -1,18 +1,24 @@
 void timer_init()
 {
-  TCCR0A |= _BV(WGM01); // CTC mode
-  TCCR0B |= _BV(CS01) | _BV(CS00);  // prescaler 64
-  OCR0A = 125;
-  TIMSK0 |= _BV(OCIE0A);  // Enable interrupt
+  noInterrupts();           // disable all interrupts
+  TCCR1A = 0;
+  TCCR1B = 0;
+  TCNT1  = 0;
+
+  OCR1A = 50;            // 250 = 1KHz, 125 = 2kHz, 50 = 5kHz
+  TCCR1B |= (1 << WGM12);   // CTC mode
+  TCCR1B |= (1 << CS11) | (1 << CS10);    // 64 prescaler 
+  TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt
+  interrupts();             // enable all interrupts
 }
 
 
-ISR(TIMER0_COMPA_vect)
+ISR(TIMER1_COMPA_vect)
 {
-  cli();
-  //muestreo();
-  blinka();
-  sei();
+  noInterrupts();
+  muestreo();
+  //blinka();
+  interrupts();
 }
 
 int asd = 0;
@@ -23,12 +29,12 @@ void blinka()
   {
     if (qwe == 1)
     {
-      digitalWrite(LED_BUILTIN, LOW);
+      digitalWrite(INPUT_PIN, LOW);
       qwe = 0;
     }
     else
     {
-      digitalWrite(LED_BUILTIN, HIGH);
+      digitalWrite(INPUT_PIN, HIGH);
       qwe = 1;
     }
     asd = 0;

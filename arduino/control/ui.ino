@@ -7,7 +7,8 @@ struct par
 struct par valuesList[] = {
   {"Kp", &Kp},
   {"Ki", &Ki},
-  {"Kd", &Kd}
+  {"Kd", &Kd},
+  {"alpha", &alpha}
 };
 
 const int listlen = sizeof(valuesList)/sizeof(par);
