@@ -1,9 +1,8 @@
 /*** closed loop ******/
 #define SAMPLE_FREQ 2500
 enum { UP, DOWN};
-
 double measured, output;
-double count, paso, fase, freq;
+double count, paso, fase;
 int st, last;
 
 void closed_loop_init()
@@ -33,7 +32,8 @@ void closed_loop()
 void reset()
 {
   paso = twopi/count;
-  freq = SAMPLE_FREQ/count;
+  double freq = SAMPLE_FREQ/count;
+  fase = getPhase(freq);
   count = 0;
 }
 
@@ -53,8 +53,6 @@ unsigned int toDac(double volt)
   volt *= 4096;
   return (unsigned int) volt;
 }
-
-double Kp, Ki, Kd;
 
 #if 0
 

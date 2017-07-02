@@ -5,9 +5,6 @@ struct par
 };
 
 struct par valuesList[] = {
-  {"Kp", &Kp},
-  {"Ki", &Ki},
-  {"Kd", &Kd},
   {"alpha", &alpha}
 };
 

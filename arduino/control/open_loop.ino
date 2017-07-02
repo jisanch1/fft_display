@@ -1,6 +1,6 @@
 /****** open loop ********/
-//const double min_res = 5600;
-const double min_res = 1550;  // 1kHz
+const double min_res = 4000;    //  2.5kHz
+//const double min_res = 1550;  //  1kHz
 int check;
 int switch_pos;
 
