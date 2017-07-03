@@ -3,13 +3,19 @@
 enum { UP, DOWN};
 double measured, output;
 double count, paso, fase;
+double gan;
 int st, last;
+double metrica, anterior;
+int gst;
 
 void closed_loop_init()
 {
   measured = 0;
   last = 0;
   fase = twopi/10;
+  gan = 0;
+  metrica = 0;
+  anterior = 0;
 }
 
 void closed_loop()
@@ -21,6 +27,9 @@ void closed_loop()
     reset();
   }
   output = sin(paso*count + fase);
+
+  //metrica += measured*measured/SAMPLE_FREQ;
+  //output *= gan;
 
   dac_val = toDac(output);
   dac_write(dac_val);
@@ -34,7 +43,29 @@ void reset()
   paso = twopi/count;
   double freq = SAMPLE_FREQ/count;
   fase = getPhase(freq);
-  count = 0;
+  count = 0; 
+  //gainHandler();
+}
+
+void gainHandler()
+{
+  if (anterior < metrica)
+  {
+    gst = !gst;
+  }
+  
+  if (gst == UP)
+  {
+    gan += 0.05;
+    gan = max(gan, 1);
+  }
+  else 
+  {
+    gan -= 0.05;
+    gan = (0, gan);
+  }
+  anterior = metrica;
+  metrica = 0;
 }
 
 double toVolt(int adcval)
