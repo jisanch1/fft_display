@@ -1,25 +1,30 @@
 #define BUF_LEN  32
 #define OUT_LEN  BUF_LEN/2
 #define FILTER_LEN  20
+#define FFT_SIZE  32
 
 int n;
 double newval;
-
-#define FFT_SIZE	32
-
+const double alpha = 0.5;
 
 double input_buffer[FFT_SIZE];
 double real_buffer[FFT_SIZE];
 double imag_buffer[FFT_SIZE];
-double output_buffer[FFT_SIZE];
+double magnitude_buffer[OUT_LEN];
+double output_buffer[OUT_LEN];
 
 void setup() {
   n = 0;
   Serial.begin(57600);
+  timer_init();
 }
 
 void loop() {
 
+}
+
+void run()
+{
   newval = analogRead(A0);
   newval /= 512;
   newval -= 1;
@@ -37,7 +42,8 @@ void loop() {
     
     for (j = 0; j < OUT_LEN; j++)
     {
-      output_buffer[j] = sqrt(real_buffer[j]*real_buffer[j] + imag_buffer[j]*imag_buffer[j]);
+      magnitude_buffer[j] = sqrt(real_buffer[j]*real_buffer[j] + imag_buffer[j]*imag_buffer[j]);
+      output_buffer[j] = (1 - alpha)*output_buffer[j] + alpha*magnitude_buffer[j];
     }
 
     for (j = 0; j < OUT_LEN - 1; j++)
@@ -48,7 +54,5 @@ void loop() {
     Serial.println(output_buffer[j]);
     
   }
-  
-  delay(4);   
 }
 
