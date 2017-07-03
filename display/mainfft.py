@@ -6,27 +6,21 @@ from serial import Serial
 from display import Screen
 
 length = 500
+maxfreq = 120
+amp = 50
 
 def run():
 	global screen
 	global stream
-	while (stream.in_waiting > 10):
+	while (stream.in_waiting > 100):
 		val = stream.readline()
+		print val
 		line = val.split(',')
-		freq = 0
+		freq = 0.0
 		for mag in line:
-			screen.update_fft(freq, mag)
-			freq += 15
+			screen.update_fft(int(freq), mag)
+			freq += 7.5
 	screen.plot_fft()
-'''
-def run():
-	global screen
-	global stream
-	while (stream.in_waiting > 10):
-		val = stream.readline()
-		screen.next_point(float(val))
-	screen.plot()
-'''
 
 
 print "Initializing..."
@@ -34,13 +28,12 @@ app = QtGui.QApplication([])
 timer = pg.QtCore.QTimer()
 
 port = sys.argv[1]
-port2 = sys.argv[2]
-if (len(sys.argv) >= 4):
-	baud = sys.argv[3]		
+if (len(sys.argv) >= 3):
+	baud = sys.argv[2]		
 else:
-	baud = 115200		
+	baud = 57600		
 
-screen = Screen(length, 5, 120, 70)
+screen = Screen(length, 5, maxfreq, amp)
 stream = Serial(port, baud)
 
 timer.timeout.connect(run)
